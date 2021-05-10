@@ -1,13 +1,13 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import './App.css';
+import './App.scss';
 
 import Homepage from './pages/homepage/homepage-component.jsx';
 import ShopPage from './pages/shop/shop-component.jsx'
 import SignInAndSignUpPage from './pages/sign-in-sign-up/sign-in-sign-up-component.jsx';
 import Header from './components/header/header-component.jsx';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 class App extends React.Component {
   constructor() {
@@ -21,9 +21,23 @@ class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user});
-    })
+    // checks if user is authorized
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+        // firebase has a snapshot function to access info
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data(),
+            }
+          })
+        });
+      } else {
+        this.setState({currentUser: userAuth})
+      }
+    });
   }
 
   componentWillUnmount() {
