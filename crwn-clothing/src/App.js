@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './App.scss';
@@ -45,13 +45,24 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={Homepage}/>
           <Route exact path='/shop' component={ShopPage}/>
-          <Route exact path='/signin' component={SignInAndSignUpPage}/>
-  
+          <Route exact path='/signin' 
+          render={() => 
+            this.props.currentUser ? (
+            <Redirect to='/'/>
+            ) : (
+            <SignInAndSignUpPage />
+            )
+          }
+          />
         </Switch>
       </div>
     );
   }
 }
+
+const maptStateToProps = ({ user }) => ({
+  currentUser: user.currentUser,
+})
 
 //this is the payload that reducers need
 const mapDispatchToProps = dispatch => ({
