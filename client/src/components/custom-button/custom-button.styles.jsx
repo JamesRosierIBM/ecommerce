@@ -32,6 +32,10 @@ const googleSignInStyles = css`
     background-color: #357ae8;
     border: none;
   }
+
+  @media screen and (max-width: 800px) {
+    width: fit-content;
+  }
 `;
 
 const getButtonStyles = props => {
