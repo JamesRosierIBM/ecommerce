@@ -6,7 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import { store, persistor } from "./redux/store";
 import CartProvider from "./providers/cart/cart.provider.jsx";
-import * as serviceWorker from './serviceWorker';
+import * as serviceWorker from './service-worker';
 
 import "./index.css";
 import App from "./App";
